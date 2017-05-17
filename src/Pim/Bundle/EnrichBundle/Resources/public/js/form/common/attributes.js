@@ -293,7 +293,7 @@ define(
                     this.config.removeAttributeRoute,
                     {
                         code: this.getFormData().code,
-                        attributeId: attribute.id
+                        attributeId: attribute.meta.id
                     }
                 );
             },
