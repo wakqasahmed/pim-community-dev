@@ -102,7 +102,7 @@ define([
 
                     var data = this.getFormData();
                     var groupedAttributes = _.groupBy(data.attributes, function (attribute) {
-                        return attribute.group_code;
+                        return attribute.group;
                     });
 
                     _.sortBy(groupedAttributes, function (attributes, group) {
