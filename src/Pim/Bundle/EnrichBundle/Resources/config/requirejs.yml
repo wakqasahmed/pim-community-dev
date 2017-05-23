@@ -741,24 +741,17 @@ config:
         pim/attribute/type-specific-form:              pimenrich/js/attribute/form/type-specific-form
 
         # Common
-        pim/common/grid:                   pimenrich/js/form/common/grid
-        pim/common/redirect:               pimenrich/js/form/common/redirect
-        pim/common/column-list-view:       pimenrich/js/common/column-list-view
-        pim/common/tab/history:            pimenrich/js/form/common/tab/history
-        pim/common/tab/properties:         pimenrich/js/form/common/tab/properties
-        pim/common/properties/translation: pimenrich/js/form/common/properties/translation
-        pim/common/properties/general:     pimenrich/js/form/common/properties/general
-        pim/common/grid:                   pimenrich/js/form/common/grid
-        pim/common/redirect:               pimenrich/js/form/common/redirect
-        pim/common/column-list-view:       pimenrich/js/common/column-list-view
-        pim/common/tab/history:            pimenrich/js/form/common/tab/history
-        pim/common/tab/properties:         pimenrich/js/form/common/tab/properties
-        pim/common/properties/translation: pimenrich/js/form/common/properties/translation
-        pim/common/add-select:             pimenrich/js/form/common/add-select/select
-        pim/common/add-select/line:        pimenrich/js/form/common/add-select/line
-        pim/common/add-select/footer:      pimenrich/js/form/common/add-select/footer
-        pim/create/properties/general:     pimenrich/js/create/form/properties/general
-        pim/common/simple-view:            pimenrich/js/form/common/simple-view
+        pim/common/grid:                       pimenrich/js/form/common/grid
+        pim/common/redirect:                   pimenrich/js/form/common/redirect
+        pim/common/column-list-view:           pimenrich/js/common/column-list-view
+        pim/common/tab/history:                pimenrich/js/form/common/tab/history
+        pim/common/tab/properties:             pimenrich/js/form/common/tab/properties
+        pim/common/properties/translation:     pimenrich/js/form/common/properties/translation
+        pim/common/properties/general:         pimenrich/js/form/common/properties/general
+        pim/common/add-select:                 pimenrich/js/form/common/add-select/select
+        pim/common/add-select/line:            pimenrich/js/form/common/add-select/line
+        pim/common/add-select/footer:          pimenrich/js/form/common/add-select/footer
+        pim/common/simple-view:                pimenrich/js/form/common/simple-view
 
         # Root
         pim/form/common/edit-form: pimenrich/js/form/common/edit-form
@@ -827,6 +820,8 @@ config:
         pim/grid/view-selector/current: pimenrich/js/grid/view-selector-current
 
         # Templates
+        pim/template/common/drop-zone:                            pimenrich/templates/common/drop-zone.html
+
         pim/template/form/group-selector:                         pimenrich/templates/form/group-selector.html
         pim/template/form/save:                                   pimenrich/templates/form/save.html
         pim/template/form/delete:                                 pimenrich/templates/form/delete.html
