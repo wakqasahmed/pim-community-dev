@@ -183,6 +183,10 @@ class RootEndpointIntegration extends ApiTestCase
             "pim_api_currency_list": {
                 "route": "/api/rest/v1/currencies",
                 "methods": ["GET"]
+            },
+            "pim_api_channel_create": {
+                "route": "/api/rest/v1/channels",
+                "methods": ["POST"]
             }
         }
     }
