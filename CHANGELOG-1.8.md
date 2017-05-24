@@ -38,10 +38,6 @@
 - Change the constructor of `Pim\Bundle\ApiBundle\EventSubscriber\CheckHeadersRequestSubscriber` to add `Pim\Bundle\ApiBundle\Negotiator\ContentTypeNegotiator`
 - Change the constructor of `Pim\Bundle\CatalogBundle\Doctrine\MongoDBODM\QueryGenerator\MultipleOptionValueUpdatedQueryGenerator` to add `Pim\Bundle\CatalogBundle\MongoDB\Normalizer\NormalizedData\AttributeOptionNormalizer`
 
-### Methods
-
-- Remove `setLabels` method from `Pim\Component\Catalog\Updater\ChannelUpdater`
-
 ## Requirements
 
 - GITHUB-5937: Remove the need to have mcrypt installed
