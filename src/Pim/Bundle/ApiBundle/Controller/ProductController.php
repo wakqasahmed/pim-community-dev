@@ -300,10 +300,13 @@ class ProductController
         $product = $this->productRepository->findOneByIdentifier($code);
         $isCreation = null === $product;
 
-        if ($isCreation) {
-            $this->validateCodeConsistency($code, $data);
-            $product = $this->productBuilder->createProduct();
+        if (!$isCreation) {
+            return new JsonResponse(null);
         }
+
+        $this->validateCodeConsistency($code, $data);
+        $product = $this->productBuilder->createProduct();
+
 
         $data['identifier'] = array_key_exists('identifier', $data) ? $data['identifier'] : $code;
         $data = $this->populateIdentifierProductValue($data);

@@ -6,9 +6,18 @@ pim_api_draft_list:
     path: /drafts
     defaults: { _controller: pim_api.controller.notification:draftsAction, _format: json }
 
+pim_api_draft_get:
+    path: /drafts/{code}/{author}
+    defaults: { _controller: pim_api.controller.notification:draftAction, _format: json }
+    methods: [GET]
+
 pim_api_notification_count_unread:
     path: /notification/count_unread
     defaults: { _controller: pim_api.controller.notification:countUnreadAction, _format: json }
+
+pim_api_notification_new_product:
+    path: /notification/new_product
+    defaults: { _controller: pim_api.controller.notification:newProductNotificationAction, _format: json }
 
 pim_api_notification_mark_viewed:
     path: /notification/mark_viewed/{id}

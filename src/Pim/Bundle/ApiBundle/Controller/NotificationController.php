@@ -3,8 +3,11 @@
 namespace Pim\Bundle\ApiBundle\Controller;
 
 use Akeneo\Component\StorageUtils\Remover\RemoverInterface;
+use Pim\Bundle\NotificationBundle\Entity\Notification;
 use Pim\Bundle\NotificationBundle\Entity\Repository\UserNotificationRepositoryInterface;
+use Pim\Bundle\NotificationBundle\NotifierInterface;
 use Pim\Bundle\UserBundle\Context\UserContext;
+use Pim\Bundle\UserBundle\Repository\UserRepositoryInterface;
 use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
 use PimEnterprise\Bundle\WorkflowBundle\Doctrine\ORM\Repository\ProductDraftRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,6 +32,14 @@ class NotificationController
      * @var ProductDraftRepository
      */
     private $productDraftRepository;
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+    /**
+     * @var NotifierInterface
+     */
+    private $notifier;
 
     /**
      * @param UserContext                         $userContext
@@ -36,19 +47,25 @@ class NotificationController
      * @param RemoverInterface                    $userNotifRemover
      * @param ProductRepositoryInterface          $productRepository
      * @param ProductDraftRepository              $productDraftRepository
+     * @param UserRepositoryInterface             $userRepository
+     * @param NotifierInterface                   $notifier
      */
     public function __construct(
         UserContext $userContext,
         UserNotificationRepositoryInterface $userNotifRepository,
         RemoverInterface $userNotifRemover,
         ProductRepositoryInterface $productRepository,
-        ProductDraftRepository $productDraftRepository
+        ProductDraftRepository $productDraftRepository,
+        UserRepositoryInterface $userRepository,
+        NotifierInterface $notifier
     ) {
         $this->userContext = $userContext;
         $this->userNotifRepository = $userNotifRepository;
         $this->userNotifRemover = $userNotifRemover;
         $this->productRepository = $productRepository;
         $this->productDraftRepository = $productDraftRepository;
+        $this->userRepository = $userRepository;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -109,6 +126,56 @@ class NotificationController
         }
 
         return new JsonResponse($result);
+    }
+
+    public function draftAction(Request $request, $code, $author)
+    {
+        $product = $this->productRepository->findOneByIdentifier($code);
+        if (null === $product) {
+            return new JsonResponse(null);
+        }
+        $draft = $this->productDraftRepository->findOneBy(['product' => $product, 'author' => $author]);
+        if (null === $draft) {
+            return new JsonResponse(null);
+        }
+
+        $result = [
+            'product_code' => $draft->getProduct()->getIdentifier()->getData(),
+            'changes' => $draft->getChanges(),
+            'author' => $draft->getAuthor(),
+            'status' => $draft->getStatus(),
+        ];
+
+        return new JsonResponse($result);
+    }
+
+    public function newProductNotificationAction()
+    {
+        $user = $this->userRepository->findOneBy(['username' => 'admin']);
+        $userNotifications = $this->userNotifRepository->findBy(['user' => $user]);
+
+        $alreadyNotified = false;
+        if (null !== $userNotifications) {
+            foreach ($userNotifications as $userNotifications) {
+                if ($userNotifications->getNotification()->getMessage() === 'New products are ready to synchronize') {
+                    $alreadyNotified = true;
+                }
+            }
+        }
+
+        if (!$alreadyNotified) {
+            $notification = new Notification();
+
+            $notification
+                ->setType('success')
+                ->setMessage('New products are ready to synchronize')
+                ->setRoute('pim_enrich_product_index')
+                ->setContext(['actionType' => 'Products ready to synchronize']);
+
+            $this->notifier->notify($notification, [$user]);
+        }
+
+        return new JsonResponse(null);
     }
 
     /**

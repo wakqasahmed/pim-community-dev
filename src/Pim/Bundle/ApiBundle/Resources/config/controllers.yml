@@ -183,3 +183,5 @@ services:
             - '@pim_notification.remover.user_notification'
             - '@pim_catalog.repository.product'
             - '@pimee_workflow.repository.product_draft'
+            - '@pim_user.repository.user'
+            - '@pim_notification.notifier'
