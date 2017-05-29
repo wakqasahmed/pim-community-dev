@@ -29,7 +29,7 @@ define([
             /**
              * Sets the url
              *
-             * @param {Sringt} url Route url
+             * @param {String} url Route url
              */
             setUrl: function (url) {
                 this.url = url;
