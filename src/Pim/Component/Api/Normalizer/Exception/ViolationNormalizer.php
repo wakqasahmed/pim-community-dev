@@ -5,6 +5,7 @@ namespace Pim\Component\Api\Normalizer\Exception;
 use Doctrine\Common\Inflector\Inflector;
 use Pim\Component\Api\Exception\ViolationHttpException;
 use Pim\Component\Catalog\AttributeTypes;
+use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -61,6 +62,10 @@ class ViolationNormalizer implements NormalizerInterface
             if ($violation->getRoot() instanceof ProductInterface &&
                 1 === preg_match('|^values\[(?P<attribute>[a-z0-9-_]+)|i', $violation->getPropertyPath(), $matches)) {
                 $error = $this->getProductValuesErrors($violation, $matches['attribute']);
+            }
+
+            if ($violation->getRoot() instanceof ChannelInterface && 'category' === $violation->getPropertyPath()) {
+                $error['property'] = 'category_tree';
             }
 
             $errors[] = $error;
