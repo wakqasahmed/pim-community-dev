@@ -79,7 +79,7 @@ define(
             },
 
             /**
-             * Clear the cached informations
+             * Clear the cached information
              */
             clearCache: function () {
                 FetcherRegistry.clearAll();
