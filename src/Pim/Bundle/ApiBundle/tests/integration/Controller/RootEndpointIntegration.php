@@ -183,6 +183,14 @@ class RootEndpointIntegration extends ApiTestCase
             "pim_api_currency_list": {
                 "route": "/api/rest/v1/currencies",
                 "methods": ["GET"]
+            },
+            "pim_api_association_type_get": {
+                "route": "/api/rest/v1/association-types/{code}",
+                "methods": ["GET"]
+            },
+            "pim_api_association_type_list": {
+                "route": "/api/rest/v1/association-types",
+                "methods": ["GET"]
             }
         }
     }

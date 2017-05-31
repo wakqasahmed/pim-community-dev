@@ -11,6 +11,7 @@ parameters:
     pim_api.controller.root_endpoint.class: Pim\Bundle\ApiBundle\Controller\RootEndpointController
     pim_api.controller.media_file.class: Pim\Bundle\ApiBundle\Controller\MediaFileController
     pim_api.controller.currency.class: Pim\Bundle\ApiBundle\Controller\CurrencyController
+    pim_api.controller.association_type.class: Pim\Bundle\ApiBundle\Controller\AssociationTypeController
 
 services:
     pim_api.controller.category:
@@ -164,6 +165,15 @@ services:
         class: '%pim_api.controller.currency.class%'
         arguments:
             - '@pim_api.repository.currency'
+            - '@pim_serializer'
+            - '@pim_api.pagination.parameter_validator'
+            - '@pim_api.pagination.offset_hal_paginator'
+            - '%pim_api.configuration%'
+
+    pim_api.controller.association_type:
+        class: '%pim_api.controller.association_type.class%'
+        arguments:
+            - '@pim_api.repository.association_type'
             - '@pim_serializer'
             - '@pim_api.pagination.parameter_validator'
             - '@pim_api.pagination.offset_hal_paginator'
