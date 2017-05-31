@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
 use Pim\Bundle\CatalogBundle\Filter\CollectionFilterInterface;
+use Pim\Component\Catalog\Model\AttributeGroupInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +58,7 @@ class AttributeGroupController
     /** @var EntityRepository */
     protected $attributeRepository;
 
-    /** @var UpdaterInterface */
+    /** @var ObjectUpdaterInterface */
     protected $attributeUpdater;
 
     /** @var SaverInterface */
@@ -205,7 +206,6 @@ class AttributeGroupController
 
     /**
      * @param Request $request
-     * @param string $identifier
      *
      * @return JsonResponse
      *
@@ -314,7 +314,7 @@ class AttributeGroupController
     /**
      * Remove action
      *
-     * @param $code
+     * @param $identifier
      *
      * @return JsonResponse
      *
