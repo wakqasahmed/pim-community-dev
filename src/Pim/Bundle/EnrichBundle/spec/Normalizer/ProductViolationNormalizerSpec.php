@@ -4,19 +4,40 @@ namespace spec\Pim\Bundle\EnrichBundle\Normalizer;
 
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Model\AttributeInterface;
+use Pim\Component\Catalog\Model\FamilyInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductTemplateInterface;
 use Pim\Component\Catalog\Model\ProductValue;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 class ProductViolationNormalizerSpec extends ObjectBehavior
 {
-    function it_supports_constraint_violation(ConstraintViolationInterface $violation)
-    {
+    function it_supports_constraint_violation_for_product(
+        ConstraintViolationInterface $violation,
+        ProductInterface $product
+    ) {
+        $violation->getRoot()->willReturn($product);
         $this->supportsNormalization($violation, 'internal_api')->shouldReturn(true);
     }
 
-    function it_normlizes_constraint_violation_with_scope_and_locale(
+    function it_supports_constraint_violation_for_product_template(
+        ConstraintViolationInterface $violation,
+        ProductTemplateInterface $productTemplate
+    ) {
+        $violation->getRoot()->willReturn($productTemplate);
+        $this->supportsNormalization($violation, 'internal_api')->shouldReturn(true);
+    }
+
+    function it_does_not_support_constraint_violation_for_other_entities(
+        ConstraintViolationInterface $violation,
+        FamilyInterface $family
+    ) {
+        $violation->getRoot()->willReturn($family);
+        $this->supportsNormalization($violation, 'internal_api')->shouldReturn(false);
+    }
+
+    function it_normalizes_constraint_violation_with_scope_and_locale(
         ConstraintViolationInterface $violation,
         ProductInterface $product,
         ProductValueInterface $productValue,
@@ -106,17 +127,6 @@ class ProductViolationNormalizerSpec extends ObjectBehavior
             'locale'    => null,
             'scope'     => null,
             'message'   => 'The price should be above 10.'
-        ]);
-    }
-
-    function it_normalizes_global_violation(ConstraintViolationInterface $violation, ProductInterface $product)
-    {
-        $violation->getPropertyPath()->willReturn('variant.color');
-        $violation->getMessage()->willReturn('Variant group already contains this color.');
-
-        $this->normalize($violation, 'internal_api', ['product' => $product])->shouldReturn([
-            'global'  => true,
-            'message' => 'Variant group already contains this color.'
         ]);
     }
 

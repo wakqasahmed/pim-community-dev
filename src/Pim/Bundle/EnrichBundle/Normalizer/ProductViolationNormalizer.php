@@ -14,7 +14,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  */
 class ProductViolationNormalizer implements NormalizerInterface
 {
-    /** @var array */
+    /** @var string[] */
     protected $supportedFormats = ['internal_api'];
 
     /**
@@ -22,38 +22,28 @@ class ProductViolationNormalizer implements NormalizerInterface
      */
     public function normalize($violation, $format = null, array $context = [])
     {
-        $path = $violation->getPropertyPath();
-
-        if (0 === strpos($path, 'values')) {
-            if (!isset($context['product'])) {
-                throw new \InvalidArgumentException('Expects a product context');
-            }
-
-            $product = $context['product'];
-
-            if (!$product instanceof ProductInterface && !$product instanceof ProductTemplateInterface) {
-                throw new \InvalidArgumentException('Expects a product or a product template as context');
-            }
-
-            $codeStart = strpos($path, '[') + 1;
-            $codeLength = strpos($path, ']') - $codeStart;
-            $attributePath = substr($path, $codeStart, $codeLength);
-            $productValue = $product->getValues()[$attributePath];
-
-            $normalizedViolation = [
-                'attribute' => $productValue->getAttribute()->getCode(),
-                'locale'    => $productValue->getLocale(),
-                'scope'     => $productValue->getScope(),
-                'message'   => $violation->getMessage()
-            ];
-        } else {
-            $normalizedViolation = [
-                'global'  => true,
-                'message' => $violation->getMessage()
-            ];
+        if (!isset($context['product'])) {
+            throw new \InvalidArgumentException('Expects a product context');
         }
 
-        return $normalizedViolation;
+        $product = $context['product'];
+
+        if (!$product instanceof ProductInterface && !$product instanceof ProductTemplateInterface) {
+            throw new \InvalidArgumentException('Expects a product or a product template as context');
+        }
+
+        $path = $violation->getPropertyPath();
+        $codeStart = strpos($path, '[') + 1;
+        $codeLength = strpos($path, ']') - $codeStart;
+        $attributePath = substr($path, $codeStart, $codeLength);
+        $productValue = $product->getValues()[$attributePath];
+
+        return [
+            'attribute' => $productValue->getAttribute()->getCode(),
+            'locale'    => $productValue->getLocale(),
+            'scope'     => $productValue->getScope(),
+            'message'   => $violation->getMessage()
+        ];
     }
 
     /**
@@ -61,6 +51,11 @@ class ProductViolationNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ConstraintViolationInterface && in_array($format, $this->supportedFormats);
+        return in_array($format, $this->supportedFormats)
+            && $data instanceof ConstraintViolationInterface
+            && (
+                $data->getRoot() instanceof ProductInterface
+                || $data->getRoot() instanceof ProductTemplateInterface
+            );
     }
 }
